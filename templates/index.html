@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <span>Temperature Probe Sensor Data</span>
+        <div>
+            <canvas width="600" height="400" id="plots"></canvas>
+        </div>
+        <script>
+
+            const socket = io();
+            const chart_canvas = document.getElementById("plots").getContext("2d");
+            let chart = null;
+
+            socket.on('connect', () => {
+                const config_data = {
+                    labels: ["0"],
+                    datasets: [
+                        {
+                             "label": 'Foam',
+                             "data": [0],
+                             "fill": false,
+                             "borderColor": 'rgb(75, 192, 192)',
+                             "tension": 0.1
+                         }, 
+                         {
+                            "label": "Plastic",
+                            "data": [0],
+                            "fill": false,
+                            "borderColor": 'rgb(55, 92, 92)',
+                            "tension": 0.1
+                         }
+                    ]
+                }
+                const config = {
+                    type: 'line',
+                    data: config_data
+                }
+                chart = new Chart(chart_canvas, config)
+                
+                setInterval(() => {
+                    console.info("Testing")
+                    socket.emit("send_data", {})
+                }, 1000)
+        
+            })
+            socket.on('disconnect', () => {
+                console.log("Disconnected")
+            })
+
+            socket.on('receive_data', ({data, label}) => {
+                console.log({data, label})
+                
+                chart.data.labels.push(label)
+                for(var i = 0; i < chart.data.datasets.length; i++) {
+                    chart.data.datasets[i].data.push(data[i])
+                }
+                chart.update()
+            
+            })
+
+
+      
+        </script>
+    </div>
+{% endblock %}
