@@ -1,0 +1,23 @@
+:root {
+
+    --primary: #F1F6F9;
+    --secondary: #394867;
+    --third: #212A3E;
+    --text1: #9BA4B5;
+    /* DECENT COLOR SCHEME
+    /* --primary: #040D12;
+    --secondary: #183D3D;
+    --third: #5C8374;
+    --text1: #93B1A6; */
+
+    /* GREENISH SCHEME
+    /* --primary: white;
+    --secondary: #04AA6D;
+    --third: #96C291;
+    --text1: #222; */
+    --connected: #071952;
+    --disconnected: #D80032;
+    --info: #FFB000;
+    --slight-info: #F5F5F5;
+
+}

@@ -1,0 +1,29 @@
+.chart-container {
+    display: flex;
+    width: 100%;
+    flex: 0.75;
+    /* height: 500px; */
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+
+}
+.chart-mini-container {
+    display: flex;
+    flex-direction: row;
+    flex: 0.5;
+    max-height: 50%;
+}
+.chart-major-container {
+    display: flex;
+    flex-direction: column;
+    flex: 0.5;
+    max-height: 100%;
+    width: 100%;
+    align-self: center;
+    justify-content: center;
+}
+.subplot {
+    display: flex;
+    flex: .25;
+}

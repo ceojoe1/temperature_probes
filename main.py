@@ -1,68 +1,94 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from random import randrange
+from gpiozero import LED
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'RANDOM_SECRET'
 socketio = SocketIO(app)
 
-probe_1 = []
-probe_2 = []
+probe_1 = {
+        "label": "Foam",
+        "id": "probe_1",
+        "data": [0],
+        "currentTemp": 0,
+        "borderColor": 'rgb(221, 255, 187)'
+
+}
+probe_2 = {
+    "label": "Plastic", 
+    "id": "probe_2",
+    "data": [0],
+    "currentTemp": 0,
+    "borderColor": 'rgb(199, 233, 176)',
+    "tension": 0.1,
+    'fill': False
+}
+probe_3 = {
+    "label": "Glass",
+    "id": "probe_3",
+    "data": [0],
+    "currentTemp": 0,
+    "borderColor": 'rgb(179, 201, 156)',
+    "tension": 0.1,
+    'fill': False
+}
+probe_4 = {
+    "label": "Cork",
+    "id": "probe_4",
+    "data": [0],
+    "currentTemp": 0,
+    "borderColor": 'rgb(164, 188, 146)',
+    "tension": 0.1,
+    'fill': False
+}
+
+
+probes = [
+    probe_1,
+    probe_2,
+    probe_3,
+    probe_4
+]
+
 labels = []
+timestamp = datetime.now()
+timestamp = timestamp.strftime("%H:%M:%S")
+labels.append(timestamp)
 
 @app.route("/")
 def main():
+    return render_template('index.html', probes=probes, labels=labels)
 
-    return render_template('index.html')
-    # labels = [
-    #     'January',
-    #     'February',
-    #     'March',
-    #     'April',
-    #     'May',
-    #     'June',
-    # ]
- 
-    # data = [
-    #     {
-    #         "label": 'Foam',
-    #         "data": [65, 59, 80, 81, 56, 55, 40],
-    #         "fill": False,
-    #         "borderColor": 'rgb(75, 192, 192)',
-    #         "tension": 0.1
-    #     }
-    # ]
-
- 
-    # # Return the components to the HTML template 
-    # return render_template(
-    #     template_name_or_list='index.html',
-    #     data=data,
-    #     labels=labels,
-    # )
 
 @socketio.on('send_data')
-def handle_client(data):
+def handle_client():
     print('sending client data')
-    probe_1.append(randrange(200))
-    probe_2.append(randrange(200))
 
-    datasets = [probe_1, probe_2]
-    labels.append(len(labels) + 1)
+    for probe in probes:
+        temp = randrange(100,200,1)
+        probe['data'].append(temp)
+        probe['currentTemp'] = temp
+
+
+    timestamp = datetime.now()
+    timestamp = timestamp.strftime("%H:%M:%S")
+    labels.append(timestamp)
+
 
     response = {
-        "datasets": datasets,
-        "lables": labels
-    }
-
-    data = [randrange(200), randrange(200)]
-    label = len(labels)
-    response = {
-        "data": data,
-        "label": str(label)
+        "labels": labels,
+        "probes": probes
     }
     emit('receive_data', response)
     #    return render_template("index.html")
+
+
+
+
+
 
 if __name__ == '__main__':
     print("run")

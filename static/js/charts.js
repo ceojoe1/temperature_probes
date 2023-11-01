@@ -1,44 +1,42 @@
-$(document).ready(function() { 
-    // const label = {{ labels | tojson }};
-    console.log("see me?")
-    const output = {
-        labels: ['test1','test2'],
-        dataset: [{
-            label: 'Test',
-            backgroundColor: 'rgb(255, 90, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [1,2]
-        }]
-    }
-    const config = {
-        type: 'line',
-        data: output,
-        options: { maintainAspectRatio: false }
-    };
 
-    // const chart = new Chart(
-    //     document.getElementById('plots').getContext("2d"),
-    //     config
-    // )
-    var chart = document.getElementById("plots").getContext("2d");
-    var pieData = [
-        {
-            value: 20,
-            color:"#878BB6"
-        },
-        {
-            value : 40,
-            color : "#4ACAB4"
-        },
-        {
-            value : 10,
-            color : "#FF8153"
-        },
-        {
-            value : 30,
-            color : "#FFEA88"
+const initChart = (labels, probes) => {
+    $(document).ready(function() {
+        socket.on('receive_data', ({labels, probes}) => {
+
+            //updateMainChart(labels, probes);
+            updateSubCharts(labels, probes);
+        })
+    })
+}
+
+
+const updateSubCharts = (labels, probes) => {
+        
+    for(subchart of subcharts) {
+        subchart.data.labels = labels
+
+        for (probe of probes) {
+
+            subchart.data.datasets.map(dataset => {
+                if(probe.label == dataset.label) {
+                    $("."+probe.id).html(probe.currentTemp+"&#8457")
+                    dataset.data.push(probe.data[probe.data.length -1 ])
+                }
+            })
         }
-    ];
-    new Chart(chart).Pie(pieData);
-});
 
+        subchart.update()
+    }
+}
+const updateMainChart = (labels, probes) => {
+    chart.data.labels = labels
+    for(probe of probes) {
+
+        chart.data.datasets.map(dataset => {
+            if(probe.label == dataset.label) {
+                dataset.data.push(probe.data[probe.data.length -1 ])
+            }
+        })
+    }
+    chart.update()
+}

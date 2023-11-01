@@ -5,65 +5,42 @@
 {% block content %}
 
     <div class="container">
-        <span>Temperature Probe Sensor Data</span>
-        <div>
-            <canvas width="600" height="400" id="plots"></canvas>
+        <div class="controls-container">
+            <div class="controls">
+                <button id="control-trigger">Activate</button>
+                <div class="control-timer-container">
+                    <span> Refresh Rate (Seconds)</span>
+                    <select id="control-timer" class="control-timer">
+                        <option value="1sec" selected>1</option>
+                        <option value="5sec">5</option>
+                        <option value="10sec">10</option>
+                        <option value="1min"> 60</option>
+                        <option value="5min">300</option>
+                    </select>
+                </div>
+            </div>
+            <div class="controls-details">
+                {% if probes %}
+                    {% for probe in probes %}
+                        <div class="controls-probe">
+                            <p class="probe-title">{{probe.label}}</p>
+                            <p class="{{probe.id}} probe-temp">{{probe.currentTemp}} &#8457;</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div> 
         </div>
-        <script>
-
-            const socket = io();
-            const chart_canvas = document.getElementById("plots").getContext("2d");
-            let chart = null;
-
-            socket.on('connect', () => {
-                const config_data = {
-                    labels: ["0"],
-                    datasets: [
-                        {
-                             "label": 'Foam',
-                             "data": [0],
-                             "fill": false,
-                             "borderColor": 'rgb(75, 192, 192)',
-                             "tension": 0.1
-                         }, 
-                         {
-                            "label": "Plastic",
-                            "data": [0],
-                            "fill": false,
-                            "borderColor": 'rgb(55, 92, 92)',
-                            "tension": 0.1
-                         }
-                    ]
-                }
-                const config = {
-                    type: 'line',
-                    data: config_data
-                }
-                chart = new Chart(chart_canvas, config)
-                
-                setInterval(() => {
-                    console.info("Testing")
-                    socket.emit("send_data", {})
-                }, 1000)
-        
-            })
-            socket.on('disconnect', () => {
-                console.log("Disconnected")
-            })
-
-            socket.on('receive_data', ({data, label}) => {
-                console.log({data, label})
-                
-                chart.data.labels.push(label)
-                for(var i = 0; i < chart.data.datasets.length; i++) {
-                    chart.data.datasets[i].data.push(data[i])
-                }
-                chart.update()
-            
-            })
-
-
-      
-        </script>
+        <div class="chart-container">
+            <div class="chart-mini-container">
+                {% if probes %}
+                    {% for probe in probes %}
+                        <canvas id="plot-{{probe.id}}" class="subplot" width="200" height="200"></canvas>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!-- <div class="chart-major-container">
+                <canvas id="plots"></canvas>
+            </div> -->
+        </div>
     </div>
 {% endblock %}
