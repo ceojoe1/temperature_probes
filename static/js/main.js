@@ -81,9 +81,19 @@ const initMain = (labels, probes) => {
                     labels: labels,
                     datasets: [probes[i]]
                 }
+                let options = {
+                    scales: {
+                        y: {
+                            suggestedMin: 40,
+                            suggestedMax: 150
+                       },
+
+                    }
+                }
                 let c = {
                     type: 'line',
-                    data: c_d
+                    data: c_d,
+                    options: options
                 }
                 let temp_chart = new Chart(cv, c);
                 subcharts.push(temp_chart);

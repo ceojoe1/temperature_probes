@@ -13,7 +13,7 @@ probe_1 = {
         "index": 0,
         "label": "Foam",
         "id": "probe_1",
-        "data": [0],
+        "data": [40],
         "currentTemp": 0,
         "borderColor": 'rgb(221, 255, 187)'
 
@@ -22,7 +22,7 @@ probe_2 = {
     "index": 1,
     "label": "Plastic", 
     "id": "probe_2",
-    "data": [0],
+    "data": [40],
     "currentTemp": 0,
     "borderColor": 'rgb(199, 233, 176)',
     "tension": 0.1,
