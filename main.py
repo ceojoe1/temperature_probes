@@ -74,7 +74,11 @@ def handle_client():
     print('sending client data')
 
     for probe in probes:
-        probe = probes_lib.read_temps(probe)
+      if (int(probe["index"]) > 1):
+          print(f"Skipping Probe: {probe['index']}")
+          continue
+      probe = probes_lib.read_temps(probe)
+      print(probe)
 
 
     timestamp = datetime.now()

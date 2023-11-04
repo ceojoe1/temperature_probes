@@ -20,6 +20,9 @@ const updateSubCharts = (labels, probes) => {
             subchart.data.datasets.map(dataset => {
                 if(probe.label == dataset.label) {
                     $("."+probe.id).html(probe.currentTemp+"&#8457")
+		    if(dataset.data.length > 10) {
+		       dataset.data = []
+  		     }
                     dataset.data.push(probe.data[probe.data.length -1 ])
                 }
             })
