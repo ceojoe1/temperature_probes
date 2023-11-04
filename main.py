@@ -93,4 +93,4 @@ def handle_client():
 if __name__ == '__main__':
     print("run")
     # app.run('0.0.0.0', debug = True, threaded=False)
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0', port=5000)
