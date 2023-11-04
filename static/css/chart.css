@@ -13,6 +13,9 @@
     flex-direction: row;
     flex: 0.5;
     max-height: 50%;
+    margin-top: 24px;
+    border: 1px solid var(--secondary);
+    border-radius: 5px;
 }
 .chart-major-container {
     display: flex;

@@ -3,13 +3,14 @@ from flask_socketio import SocketIO, emit
 from random import randrange
 from gpiozero import LED
 from datetime import datetime
-
+from libs.temp_probes import Temp_Probes
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'RANDOM_SECRET'
 socketio = SocketIO(app)
 
 probe_1 = {
+        "index": 0,
         "label": "Foam",
         "id": "probe_1",
         "data": [0],
@@ -18,6 +19,7 @@ probe_1 = {
 
 }
 probe_2 = {
+    "index": 1,
     "label": "Plastic", 
     "id": "probe_2",
     "data": [0],
@@ -27,6 +29,7 @@ probe_2 = {
     'fill': False
 }
 probe_3 = {
+    "index": 2,
     "label": "Glass",
     "id": "probe_3",
     "data": [0],
@@ -36,6 +39,7 @@ probe_3 = {
     'fill': False
 }
 probe_4 = {
+    "index": 3,
     "label": "Cork",
     "id": "probe_4",
     "data": [0],
@@ -58,6 +62,8 @@ timestamp = datetime.now()
 timestamp = timestamp.strftime("%H:%M:%S")
 labels.append(timestamp)
 
+probes_lib = Temp_Probes()
+
 @app.route("/")
 def main():
     return render_template('index.html', probes=probes, labels=labels)
@@ -68,9 +74,7 @@ def handle_client():
     print('sending client data')
 
     for probe in probes:
-        temp = randrange(100,200,1)
-        probe['data'].append(temp)
-        probe['currentTemp'] = temp
+        probe = probes_lib.read_temps(probe)
 
 
     timestamp = datetime.now()
