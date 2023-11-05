@@ -12,17 +12,15 @@ const initChart = (labels, probes) => {
 
 const updateSubCharts = (labels, probes) => {
         
+    var label = labels[labels.length-1]
+    subcharts[0].data.labels.push(label)
     for(subchart of subcharts) {
-        subchart.data.labels = labels
 
         for (probe of probes) {
 
             subchart.data.datasets.map(dataset => {
                 if(probe.label == dataset.label) {
                     $("."+probe.id).html(probe.currentTemp+"&#8457")
-		    if(dataset.data.length > 10) {
-		       dataset.data = []
-  		     }
                     dataset.data.push(probe.data[probe.data.length -1 ])
                 }
             })

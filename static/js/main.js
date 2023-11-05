@@ -24,10 +24,10 @@ const initMain = (labels, probes) => {
         chart = null;
 
         // chart_canvas = $("#plots")[0].getContext("2d");
-        subchart_canvas_1 = $("#plot-probe_1")[0].getContext("2d")
-        subchart_canvas_2 = $("#plot-probe_2")[0].getContext("2d")
-        subchart_canvas_3 = $("#plot-probe_3")[0].getContext("2d")
-        subchart_canvas_4 = $("#plot-probe_4")[0].getContext("2d")
+        // subchart_canvas_1 = $("#plot-probe_1")[0].getContext("2d")
+        // subchart_canvas_2 = $("#plot-probe_2")[0].getContext("2d")
+        // subchart_canvas_3 = $("#plot-probe_3")[0].getContext("2d")
+        // subchart_canvas_4 = $("#plot-probe_4")[0].getContext("2d")
 
         control_trigger = $("#control-trigger");
         control_timer = $(".control-timer");
@@ -76,8 +76,8 @@ const initMain = (labels, probes) => {
             // chart = new Chart(chart_canvas, config)
 
             for(var i = 0; i < probes.length; i ++) {
-                let cv = $("#plot-"+probes[i].id)[0].getContext("2d");
-                let c_d = {
+                let canvas = $("#plot-"+probes[i].id)[0].getContext("2d");
+                let data = {
                     labels: labels,
                     datasets: [probes[i]]
                 }
@@ -90,12 +90,12 @@ const initMain = (labels, probes) => {
 
                     }
                 }
-                let c = {
+                let configs = {
                     type: 'line',
-                    data: c_d,
+                    data: data,
                     options: options
                 }
-                let temp_chart = new Chart(cv, c);
+                let temp_chart = new Chart(canvas, configs);
                 subcharts.push(temp_chart);
             }
             

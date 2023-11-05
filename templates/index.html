@@ -19,7 +19,7 @@
                     </select>
                 </div>
             </div>
-            <div class="controls-details">
+            <!-- <div class="controls-details">
                 {% if probes %}
                     {% for probe in probes %}
                         <div class="controls-probe">
@@ -28,16 +28,32 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-            </div> 
+            </div>  -->
         </div>
         <div class="chart-container">
-            <div class="chart-mini-container">
                 {% if probes %}
                     {% for probe in probes %}
-                        <canvas id="plot-{{probe.id}}" class="subplot" width="200" height="200"></canvas>
-                    {% endfor %}
+                        <div class="chart-card">
+                            <div class="controls-probe">
+                                <p class="probe-title">{{probe.label}}</p>
+                                <p class="{{probe.id}} probe-temp">{{probe.currentTemp}} &#8457;</p>
+                            </div>
+                            <div class="canvas-container">
+                                <canvas id="plot-{{probe.id}}" class="subplot"></canvas>
+                            </div>
+                            <div class="data-table-container">
+                                <table class="data-table">
+                                    <tr>
+                                        <th>Timestamp</th>
+                                            <th>Temperature</th>
+                                            <th>Delta</th>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        {% endfor %}
                 {% endif %}
-            </div>
             <!-- <div class="chart-major-container">
                 <canvas id="plots"></canvas>
             </div> -->

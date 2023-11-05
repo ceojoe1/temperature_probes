@@ -1,11 +1,11 @@
 .container {
     display: flex;
     height: 100%;
-    max-width: 1770px;
     width: 100%;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+
 }
 .controls-container {
     display: flex;
@@ -35,11 +35,11 @@
 .controls-probe {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     background: var(--secondary);
     padding: 12px;
-    flex: 0.5;
+    flex: 0.2;
     margin-left: 8px;
     min-width: 100px;
     border-radius: 5px;
@@ -70,14 +70,32 @@
     border-radius: 12px;
     font-size: 26px;
     color: var(--text1);
+    width: 50%;
 }
 .probe-title {
     width: 100%;
     display: flex;
     justify-content: center;
     color: var(--slight-info);
-    font-size: 19px;
+    font-size: 45px;
     padding: 4px;
     margin: 0px;
     border-bottom: 1px solid var(--text1)
+}
+
+
+
+
+
+.data-table-container {
+    display: flex;
+    flex: 0.25;
+    width: 100%;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+.data-table th {
+    background-color: var(--primary);
+    color: var(--secondary);
+    padding: 8px;
 }

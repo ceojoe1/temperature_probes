@@ -13,6 +13,7 @@ probe_1 = {
         "index": 0,
         "label": "Foam",
         "id": "probe_1",
+        "timestamps": [datetime.now().strftime("%H:%M:%S")],
         "data": [40],
         "currentTemp": 0,
         "borderColor": 'rgb(221, 255, 187)'
@@ -22,6 +23,7 @@ probe_2 = {
     "index": 1,
     "label": "Plastic", 
     "id": "probe_2",
+    "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "data": [40],
     "currentTemp": 0,
     "borderColor": 'rgb(199, 233, 176)',
@@ -32,6 +34,7 @@ probe_3 = {
     "index": 2,
     "label": "Glass",
     "id": "probe_3",
+    "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "data": [0],
     "currentTemp": 0,
     "borderColor": 'rgb(179, 201, 156)',
@@ -42,6 +45,7 @@ probe_4 = {
     "index": 3,
     "label": "Cork",
     "id": "probe_4",
+    "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "data": [0],
     "currentTemp": 0,
     "borderColor": 'rgb(164, 188, 146)',
@@ -73,16 +77,19 @@ def main():
 def handle_client():
     print('sending client data')
 
+    timestamp = datetime.now()
+    timestamp = timestamp.strftime("%H:%M:%S")
+    
     for probe in probes:
       if (int(probe["index"]) > 1):
           print(f"Skipping Probe: {probe['index']}")
           continue
+      
       probe = probes_lib.read_temps(probe)
+      probe["timestamp"] = timestamp
       print(probe)
 
 
-    timestamp = datetime.now()
-    timestamp = timestamp.strftime("%H:%M:%S")
     labels.append(timestamp)
 
 
