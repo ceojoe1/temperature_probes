@@ -1,12 +1,4 @@
-.container {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-}
+/**** Controls */
 .controls-container {
     display: flex;
     flex-direction: row;
@@ -16,7 +8,9 @@
     align-items: center;
     width: 100%;
 }
-.controls {
+
+/**** Timer Controls */
+.controls_timer-container {
     display: flex;
     justify-content: center;
     flex: 0.2;
@@ -24,6 +18,47 @@
     justify-content: center;
     align-items: center;
 }
+.controls_timer-subcontainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+}
+.controls_timer-title {
+    font-size: 1em;
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.controls_timer-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--text1);
+    border-radius: 5px;
+    background: var(--text1);
+}
+
+.controls_timer-trigger {
+    width: 250px;
+    height: 50px;
+    background-color: var(--secondary);
+    color: var(--primary);
+    border-radius: 5px;
+}
+.controls_timer-options {
+    width: 80%;
+    height: 50px;
+    margin-top: 12px;
+    border-radius: 5px;
+}
+
 .controls-details {
     display: flex;
     flex-direction: row;
@@ -32,70 +67,33 @@
     min-width: 250px;
     flex: 1;
 }
-.controls-probe {
+
+
+.controls-container_trigger-container {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background: var(--secondary);
-    padding: 12px;
-    flex: 0.2;
-    margin-left: 8px;
-    min-width: 100px;
-    border-radius: 5px;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
 }
-#control-trigger {
+.controls_reset-trigger {
     width: 250px;
     height: 50px;
-    background-color: var(--secondary);
+    background-color: var(--info);
     color: var(--primary);
     border-radius: 5px;
 }
-.control-timer-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-top: 12px;
-}
-.control-timer {
-    width: 80%;
+
+.trigger {
+    width: 100px;
     height: 50px;
-    margin-top: 12px;
-    border-radius: 5px;
-}
-.probe-temp {
-    padding: 12px;
-    background: var(--slight-info);
-    border-radius: 12px;
-    font-size: 26px;
-    color: var(--text1);
-    width: 50%;
-}
-.probe-title {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    color: var(--slight-info);
-    font-size: 45px;
-    padding: 4px;
-    margin: 0px;
-    border-bottom: 1px solid var(--text1)
-}
-
-
-
-
-
-.data-table-container {
-    display: flex;
-    flex: 0.25;
-    width: 100%;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-.data-table th {
     background-color: var(--primary);
     color: var(--secondary);
-    padding: 8px;
+    border-radius: 5px;
+    margin-right: 12px;
 }
+.trigger:hover {
+    background-color: var(--secondary);
+    color: var(--primary);
+}
+
+

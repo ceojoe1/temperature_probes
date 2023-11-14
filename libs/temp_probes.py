@@ -36,7 +36,9 @@ class Temp_Probes:
                 probe["temp_f"] = temp_f
                 probe["temp_c"] = temp_c
         except Exception as ex:
-            print(f"Failed to read temperature data | {ex}")
+            error_msg = f"Failed to read temperature data | {ex}"
+            print(error_msg)
+            probe["errors"].append(error_msg)
             
         return probe
 

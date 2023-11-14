@@ -3,46 +3,74 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
-
-    <div class="container">
+    <div class="error-container">
+        <p class="error-details">Test Errors</p>
+    </div>
+    <div class="main-container">
         <div class="controls-container">
-            <div class="controls">
-                <button id="control-trigger">Activate</button>
-                <div class="control-timer-container">
-                    <span> Refresh Rate (Seconds)</span>
-                    <select id="control-timer" class="control-timer">
-                        <option value="1sec" selected>1</option>
-                        <option value="5sec">5</option>
-                        <option value="10sec">10</option>
-                        <option value="1min"> 60</option>
-                        <option value="5min">300</option>
-                    </select>
-                </div>
+            <div class="controls_timer-container">
+                    <div class="controls_timer-subcontainer">
+                        <span class="controls_timer-title"> Refresh Rate (Seconds)</span>
+                        <select id="controls_timer-options" class="controls_timer-options">
+                            <option value="1sec" selected>1</option>
+                            <option value="5sec">5</option>
+                            <option value="10sec">10</option>
+                            <option value="1min"> 60</option>
+                            <option value="5min">300</option>
+                        </select>
+                    </div>
+                    <div class="controls-container_trigger-container">
+                        <button class="controls_timer-trigger trigger">Activate</button>
+                        <button class="controls_reset-trigger trigger"> Reset </button>
+                        <button class="controls_print-trigger trigger"> Print</button>
+                    </div>
             </div>
-            <!-- <div class="controls-details">
-                {% if probes %}
-                    {% for probe in probes %}
-                        <div class="controls-probe">
-                            <p class="probe-title">{{probe.label}}</p>
-                            <p class="{{probe.id}} probe-temp">{{probe.currentTemp}} &#8457;</p>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>  -->
+
         </div>
-        <div class="chart-container">
+        <div class="charts-container">
                 {% if probes %}
                     {% for probe in probes %}
-                        <div class="chart-card">
-                            <div class="controls-probe">
-                                <p class="probe-title">{{probe.label}}</p>
-                                <p class="{{probe.id}} probe-temp">{{probe.currentTemp}} &#8457;</p>
+                        <div class="charts_card">
+                            <div class="charts_card-probe-details">
+                                <p class="charts_card-probe-title">{{probe.label}}</p>
+                                <div class="charts_card-probe-details-body">
+                                    <p class="charts_card-probe-details-body_title">
+                                        Initial Temperature
+                                    </p>
+                                    <p class="{{probe.id}} {{probe.id}}_initialTemp charts_card-probe-details-body_data">
+                                        {{probe.initialTemp}} &#8457;
+                                    </p>
+                                </div>
+                                <div class="charts_card-probe-details-body">
+                                    <p class="charts_card-probe-details-body_title">
+                                        Current Temperature
+                                    </p>
+                                    <p class="{{probe.id}} {{probe.id}}_currentTemp charts_card-probe-details-body_data">
+                                        {{probe.currentTemp}} &#8457;
+                                    </p>
+                                </div>
+                                <div class="charts_card-probe-details-body">
+                                    <p class="charts_card-probe-details-body_title">
+                                        Delta
+                                    </p>
+                                    <p class=" {{probe.id}}_currentDelta charts_card-probe-details-body_data">
+                                        {{probe.currentDelta}} &#8457
+                                    </p>
+                                </div>
+                                <div class="charts_card-probe-details-body">
+                                    <p class="charts_card-probe-details-body_title">
+                                        Elapsed
+                                    </p>
+                                    <p class=" {{probe.id}}_elapsed charts_card-probe-details-body_data">
+                                        {{probe.elapsed}}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="canvas-container">
-                                <canvas id="plot-{{probe.id}}" class="subplot"></canvas>
+                            <div class="charts_card-canvas-container">
+                                <canvas id="plot-{{probe.id}}" class="charts_card-plots"></canvas>
                             </div>
-                            <div class="data-table-container">
-                                <table class="data-table">
+                            <div class="charts_card-data-table-container">
+                                <table class="charts_card-data-table">
                                     <tr>
                                         <th>Timestamp</th>
                                             <th>Temperature</th>

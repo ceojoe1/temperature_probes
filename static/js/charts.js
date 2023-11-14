@@ -5,10 +5,47 @@ const initChart = (labels, probes) => {
 
             //updateMainChart(labels, probes);
             updateSubCharts(labels, probes);
+            updateDataPanels(labels, probes);
+        })
+        socket.on('reset_data', () => {
+            console.log("Resetting data");
+            subcharts[0].data.labels = []
+            for(subchart of subcharts) {
+                subchart.data.datasets.map(dataset => {
+                    dataset.data = []
+                })
+            }
+            for (probe of probes) {
+                let initialTemp = $(`.${probe.id}_initialTemp`)
+                let currentTemp = $(`.${probe.id}_currentTemp`)
+                let currentDelta = $(`.${probe.id}_currentDelta`)
+                let elapsed = $(`.${probe.id}_elapsed`)
+
+                initialTemp.html("0 &#8457")
+                currentTemp.html("0 &#8457")
+                currentDelta.html("0")
+                elapsed.html("0")
+
+            }
         })
     })
 }
 
+const updateDataPanels = (labels, probes) => {
+    for (probe of probes) {
+        let initialTemp = $(`.${probe.id}_initialTemp`)
+        let currentTemp = $(`.${probe.id}_currentTemp`)
+        let currentDelta = $(`.${probe.id}_currentDelta`)
+        let elapsed = $(`.${probe.id}_elapsed`)
+
+        initialTemp.html(`${probe.initialTemp.toFixed(2)} &#8457`)
+        currentTemp.html(`${probe.currentTemp.toFixed(2)} &#8457`)
+        currentDelta.html(`${probe.currentDelta.toFixed(2)}`)
+        elapsed.html(`${probe.elapsed.toFixed(2)}`)
+
+
+    }
+}
 
 const updateSubCharts = (labels, probes) => {
         
@@ -20,7 +57,7 @@ const updateSubCharts = (labels, probes) => {
 
             subchart.data.datasets.map(dataset => {
                 if(probe.label == dataset.label) {
-                    $("."+probe.id).html(probe.currentTemp+"&#8457")
+                    // $("."+probe.id).html(probe.currentTemp+"&#8457")
                     dataset.data.push(probe.data[probe.data.length -1 ])
                 }
             })

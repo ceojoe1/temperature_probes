@@ -1,21 +1,16 @@
-let chart_canvas;
-let subchart_canvas_1;
-let subchart_canvas_2;
-let subchart_canvas_3;
-let subchart_canvas_4;
 
-let chart;
-let subchart_1;
-let subchart_2;
-let subchart_3;
-let subchart_4;
 let subcharts = [];
 
 let socket;
-let control_trigger;
 let control_timer;
 let triggers;
 let refreshTimer;
+let timer_option;
+let errorContainer;
+
+let control_trigger;
+let resest_trigger;
+let print_trigger;
 
 const initMain = (labels, probes) => {
     $(document).ready(function() { 
@@ -23,25 +18,28 @@ const initMain = (labels, probes) => {
         socket = io();
         chart = null;
 
-        // chart_canvas = $("#plots")[0].getContext("2d");
-        // subchart_canvas_1 = $("#plot-probe_1")[0].getContext("2d")
-        // subchart_canvas_2 = $("#plot-probe_2")[0].getContext("2d")
-        // subchart_canvas_3 = $("#plot-probe_3")[0].getContext("2d")
-        // subchart_canvas_4 = $("#plot-probe_4")[0].getContext("2d")
 
-        control_trigger = $("#control-trigger");
-        control_timer = $(".control-timer");
+        control_trigger = $(".controls_timer-trigger");
+        resest_trigger = $(".controls_reset-trigger");
+        print_trigger = $(".controls_print-trigger");
+
+        control_timer = $(".controls_timer-options");
+        errorContainer = $(".error-container");
+        timer_option = $(".controls_timer-options option:selected")
 
 
         control_timer.on('change', () => {
-            clearInterval(refreshTimer);
-            timer_option = $(".control-timer option:selected").text();
-            console.log("Timer changed to: " + timer_option)
+          
             
-            refreshTimer = setInterval(() => {
-                    console.info("Testing")
-                    socket.emit("send_data")
-                }, (timer_option * 1000))
+            if(control_timer.html() == "Deactivate") {
+                clearInterval(refreshTimer);
+                let refresh_rate = timer_option.text() * 1000;
+                console.log("Timer changed to: " + timer_option)
+                refreshTimer = setInterval(() => {
+                        console.info("Testing on change state")
+                        socket.emit("send_data")
+                    }, (refresh_rate))
+            }
         })
 
         control_trigger.on('click', () => {
@@ -49,31 +47,31 @@ const initMain = (labels, probes) => {
             let value = control_trigger.html();
             if(value == "Activate") {
                 control_trigger.html("Deactivate")
-                var timer_option =  $(".control-timer option:selected").text();
-
+                let refresh_rate = timer_option.text() * 1000
                 refreshTimer = setInterval(() => {
-                    console.info("Testing")
+                    console.info("Testing click state")
                     socket.emit("send_data")
-                }, (timer_option * 1000))
+                }, (refresh_rate))
             } else {
                 control_trigger.html("Activate")
                 clearInterval(refreshTimer);
+                socket.emit("stop_data")
 
             }
         })
 
+        resest_trigger.on('click', () => {
+            control_trigger.html("Activate")
+            clearInterval(refreshTimer);
+            socket.emit("reset_data")
+        })
+
+        print_trigger.on('click', () => {
+            print()
+        })
         socket.on('connect', () => {
             console.log("Connected to socket")
-            // console.log({labels, probes})
-            // const config_data = {
-            //     labels: labels,
-            //     datasets: probes
-            // }
-            // const config = {
-            //     type: 'line',
-            //     data: config_data
-            // }
-            // chart = new Chart(chart_canvas, config)
+
 
             for(var i = 0; i < probes.length; i ++) {
                 let canvas = $("#plot-"+probes[i].id)[0].getContext("2d");
@@ -107,6 +105,13 @@ const initMain = (labels, probes) => {
         socket.on('disconnect', () => {
             console.log("Disconnected")
             clearInterval(refreshTimer);
+        })
+        socket.on("server_error", (errors) => {
+            errorContainer.addClass("enable_error")
+            socket.emit("stop_data")
+            clearInterval(refreshTimer);
+
+
         })
     })
 }

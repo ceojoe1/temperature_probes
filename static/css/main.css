@@ -4,4 +4,32 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+.main-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.error-container {
+    margin-top: 50px;
+    /* position: fixed; */
+    top: 0;
+    display: none;
+    /* height: 250px; */
+    background: var(--disconnected);
+    width: 100vw;
+    color: var(--info);
+    font-size: 2em;
+    justify-content: flex-start;
+    padding: 12px;
+    padding-top: 12px;
+}
+.enable-error {
+    display: flex;
 }
