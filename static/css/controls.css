@@ -20,6 +20,7 @@
 }
 .controls_timer-subcontainer {
     display: flex;
+    width:100%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -27,6 +28,7 @@
 }
 .controls_timer-title {
     font-size: 1em;
+    flex: 0.5;
     color: var(--secondary);
     display: flex;
     justify-content: center;
@@ -53,7 +55,7 @@
     border-radius: 5px;
 }
 .controls_timer-options {
-    width: 80%;
+    flex: 1;
     height: 50px;
     margin-top: 12px;
     border-radius: 5px;
@@ -96,4 +98,34 @@
     color: var(--primary);
 }
 
+.controls_timer-next-refresh {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    padding: 12PX;
+}
 
+
+.controls_temperature-sensor_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 0.5;
+}
+
+.temp-sensor-data {
+    background-color: var(--secondary);
+    width: 200px;
+    height: 100%;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 24px;
+    color: var(--info);
+    border-radius: 12px;
+}

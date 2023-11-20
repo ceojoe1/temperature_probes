@@ -21,24 +21,24 @@ class Temp_Probes:
         return lines
     
     def read_temps(self, probe):
-        try:
-            lines = self.read_temp_raw(probe["index"])
-            if lines[1].strip()[-3:] != 'YES':
-                equals_pos = lines[1].find('t=')
-                temp_string = lines[1][equals_pos+2:]
-                temp_c = float(temp_string) / 1000.0
-                temp_f = temp_c * 9.0 / 5.0 + 32.0
-                temp_c = round(temp_c, 2)
-                temp_f = round(temp_f, 2)
+        # try:
+        lines = self.read_temp_raw(probe["index"])
+        if lines[1].strip()[-3:] != 'YES':
+            equals_pos = lines[1].find('t=')
+            temp_string = lines[1][equals_pos+2:]
+            temp_c = float(temp_string) / 1000.0
+            temp_f = temp_c * 9.0 / 5.0 + 32.0
+            temp_c = round(temp_c, 2)
+            temp_f = round(temp_f, 2)
 
-                probe["currentTemp"] = temp_f
-                probe["data"].append(temp_f)
-                probe["temp_f"] = temp_f
-                probe["temp_c"] = temp_c
-        except Exception as ex:
-            error_msg = f"Failed to read temperature data | {ex}"
-            print(error_msg)
-            probe["errors"].append(error_msg)
+            probe["currentTemp"] = temp_f
+            probe["data"].append(temp_f)
+            probe["temp_f"] = temp_f
+            probe["temp_c"] = temp_c
+        # except Exception as ex:
+        #     error_msg = f"Failed to read temperature data | {ex}"
+        #     print(error_msg)
+        #     probe["errors"].append(error_msg)
             
         return probe
 

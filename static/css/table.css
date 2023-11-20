@@ -1,0 +1,30 @@
+/***** Data Table */
+.charts_card-data-table-container {
+    display: flex;
+    flex: 0.25;
+    width: 100%;
+    justify-content: flex-start;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+
+}
+.charts_card-data-table th {
+    background-color: var(--primary);
+    color: var(--secondary);
+    padding: 8px;
+}
+
+.smallDelta {
+background-color: #872341;
+}
+.midDelta {
+    background-color: #BE3144;
+}
+.largeDelta {
+    background-color: #F05941;
+}
+.table_alignment {
+    padding: 12px;
+}

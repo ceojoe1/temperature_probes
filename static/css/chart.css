@@ -96,18 +96,11 @@
 } */
 
 
-/***** Data Table */
-.charts_card-data-table-container {
-    display: flex;
-    flex: 0.25;
-    width: 100%;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-.charts_card-data-table th {
-    background-color: var(--primary);
-    color: var(--secondary);
-    padding: 8px;
-}
 
+/* .charts_card-data-table tbody {
+    display: flex;
+    flex: 1;
+    justify-content: space-evenly;
+    flex-direction: column-reverse;
+} */
 

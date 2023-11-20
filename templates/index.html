@@ -18,12 +18,19 @@
                             <option value="1min"> 60</option>
                             <option value="5min">300</option>
                         </select>
+                        <div class="controls_timer-next-refresh">
+                            <p> Next Refresh in: <span class="next-refresh"></span></p>
+                        </div>
                     </div>
                     <div class="controls-container_trigger-container">
                         <button class="controls_timer-trigger trigger">Activate</button>
                         <button class="controls_reset-trigger trigger"> Reset </button>
                         <button class="controls_print-trigger trigger"> Print</button>
                     </div>
+            </div>
+            <div class="controls_temperature-sensor_container">
+                <p> Ambient Temperature</p>
+                <p class="temp-sensor-data"> {{control.data | last }} &#8457</p>
             </div>
 
         </div>
@@ -59,7 +66,7 @@
                                 </div>
                                 <div class="charts_card-probe-details-body">
                                     <p class="charts_card-probe-details-body_title">
-                                        Elapsed
+                                        Elapsed (Minutes)
                                     </p>
                                     <p class=" {{probe.id}}_elapsed charts_card-probe-details-body_data">
                                         {{probe.elapsed}}
@@ -70,11 +77,12 @@
                                 <canvas id="plot-{{probe.id}}" class="charts_card-plots"></canvas>
                             </div>
                             <div class="charts_card-data-table-container">
-                                <table class="charts_card-data-table">
+                                <table class="charts_card-data-table" id="table-{{probe.id}}">
                                     <tr>
                                         <th>Timestamp</th>
                                             <th>Temperature</th>
                                             <th>Delta</th>
+                                            <th>Delta %</th>
                                         </th>
                                     </tr>
                                 </table>

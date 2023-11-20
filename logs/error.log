@@ -1,0 +1,26 @@
+[2023-11-20 12:08:22 -0700] [1388] [INFO] Starting gunicorn 21.2.0
+[2023-11-20 12:08:22 -0700] [1388] [INFO] Listening at: http://0.0.0.0:8000 (1388)
+[2023-11-20 12:08:22 -0700] [1388] [INFO] Using worker: sync
+[2023-11-20 12:08:22 -0700] [1403] [INFO] Booting worker with pid: 1403
+[2023-11-20 12:08:22 -0700] [1404] [INFO] Booting worker with pid: 1404
+[2023-11-20 12:08:22 -0700] [1405] [INFO] Booting worker with pid: 1405
+[2023-11-20 12:08:22 -0700] [1406] [INFO] Booting worker with pid: 1406
+sh: 1: sh: 1: modprobe: not found
+modprobe: not found
+sh: 1: sh: 1: modprobe: not foundmodprobe: not found
+
+sh: 1: modprobe: not found
+sh: 1: modprobe: not found
+sh: 1: modprobe: not found
+sh: 1: modprobe: not found
+Invalid session 0x_K43ppxa2wOXpaAAAA (further occurrences of this error will be logged with level INFO)
+Invalid session 0x_K43ppxa2wOXpaAAAA (further occurrences of this error will be logged with level INFO)
+Invalid session vQStZUZceaDePi_JAAAA (further occurrences of this error will be logged with level INFO)
+Invalid session HOrbcFkXwQtU38KoAAAD (further occurrences of this error will be logged with level INFO)
+level INFO)
+[2023-11-20 12:07:06 -0700] [17352] [INFO] Handling signal: term
+[2023-11-20 12:07:06 -0700] [17364] [INFO] Worker exiting (pid: 17364)
+[2023-11-20 12:07:06 -0700] [17365] [INFO] Worker exiting (pid: 17365)
+[2023-11-20 12:07:06 -0700] [17367] [INFO] Worker exiting (pid: 17367)
+[2023-11-20 12:07:24 -0700] [17366] [INFO] Worker exiting (pid: 17366)
+[2023-11-20 12:07:24 -0700] [17352] [INFO] Shutting down: Master
