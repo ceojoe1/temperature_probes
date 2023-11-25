@@ -179,11 +179,11 @@ const updatDataTable = (labels, probes, control) => {
             let threshold = 2
             let isControlReached = temp >= (currentControlTemp - threshold) && temp <= (currentControlTemp + threshold)
             let classNames = ''
-            if (deltaPercent > 0 && deltaPercent <= 1.0) {
+            if (deltaPercent <= 0 && deltaPercent >= -2.0) {
                 classNames = 'smallDelta'
-            } else if (deltaPercent > 1.0 && deltaPercent <= 1.5) {
+            } else if (deltaPercent < -2.0 && deltaPercent >= -5) {
                 classNames = "midDelta"
-            } else if (deltaPercent > 1.5) {
+            } else if (deltaPercent < -5) {
                 classNames = "largeDelta"
             } else if (isControlReached) {
                 classNames = 'targetReached'
@@ -210,14 +210,14 @@ const updatDataTable = (labels, probes, control) => {
                 let currentTemp = probes[probe].data[probes[probe].data.length - i]
                 let currentLabel = labels[labels.length - i]
                 let currentDelta = probes[probe].deltas[probes[probe].deltas.length - i]
-
+                initialTemp = probes[probe].initialTemp
                 addRow(probes[probe], currentTemp, currentLabel, currentDelta, control)
             }
         } else {
             let currentTemp = probes[probe].data[probes[probe].data.length - 1]
             let currentLabel = labels[labels.length - 1]
             let currentDelta = probes[probe].deltas[probes[probe].deltas.length - 1]
-
+            let initialTemp = probes[probe].initialTemp
             addRow(probes[probe], currentTemp, currentLabel, currentDelta, control)
         }
       

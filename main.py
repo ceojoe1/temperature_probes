@@ -25,7 +25,7 @@ ERRORS = []
 DATA_ACTIVE = False
 
 DATA_THREAD = None
-TIMER_THREAD = None
+COUNTDOWN_THREAD = None
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'RANDOM_SECRET'
@@ -54,7 +54,7 @@ probe_1 = {
         "id": "probe_1",
         "timestamps": [datetime.now().strftime("%H:%M:%S")],
         "elapsed": 0,
-        "data": [40],
+        "data": [200],
         "deltas": [],
         "currentDelta": 0,
         "currentTemp": 0,
@@ -71,7 +71,7 @@ probe_2 = {
     "id": "probe_2",
     "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "elapsed": 0,
-    "data": [40],
+    "data": [200],
     "deltas": [],
     "currentDelta": 0,
     "currentTemp": 0,
@@ -88,7 +88,7 @@ probe_3 = {
     "id": "probe_3",
     "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "elapsed": 0,
-    "data": [0],
+    "data": [200],
     "deltas": [],
     "currentDelta": 0,
     "currentTemp": 0,
@@ -105,7 +105,7 @@ probe_4 = {
     "id": "probe_4",
     "timestamps": [datetime.now().strftime("%H:%M:%S")],
     "elapsed": 0,
-    "data": [0],
+    "data": [200],
     "deltas": [],
     "currentDelta": 0,
     "currentTemp": 0,
@@ -167,10 +167,16 @@ def stop_data():
 
 connection_counter = 0
 
-def activate_countdown():
-   while settings["ttl"] > 0:
-      settings["ttl"] -= 1
-      emit("timer_countdown", settings["ttl"])
+def countdown(settings):
+   ttl = int(settings["ttl"])
+   while True:
+      if(DATA_ACTIVE is False):
+         print("Canceling countdown")
+         break
+      socketio.emit("timer_countdown", ttl)
+      ttl -= 1
+      if(ttl == 0):
+         ttl = int(settings["ttl"])
       time.sleep(1)
 
 
@@ -196,7 +202,7 @@ def data_handler(_settings):
 @socketio.on("deactivate_data")
 def deactivate_data():
    print("Deactivating Data")
-   global DATA_THREAD, START_TIME, STOP_TIME, DATA_ACTIVE
+   global DATA_THREAD, START_TIME, STOP_TIME, DATA_ACTIVE, COUNTDOWN_THREAD
    DATA_ACTIVE = False
    START_TIME = None
    STOP_TIME = None
@@ -206,7 +212,11 @@ def deactivate_data():
    if(DATA_THREAD is not None):
       DATA_THREAD.join()
 
+   if(COUNTDOWN_THREAD is not None):
+      COUNTDOWN_THREAD.join()
+
    DATA_THREAD = None
+   COUNTDOWN_THREAD = None
    
    
 
@@ -214,26 +224,25 @@ def deactivate_data():
 @socketio.on('activate_data')
 def activate_data(_settings):
    print("Resetting data activation")
-   global DATA_ACTIVE
-   global COUNTER_ACTIVE
-   global DATA_THREAD
+   global DATA_ACTIVE, COUNTER_ACTIVE, DATA_THREAD, COUNTDOWN_THREAD
    DATA_ACTIVE = True
    COUNTER_ACTIVE = False
 
    _settings["active"] = DATA_ACTIVE
    settings["active"] = DATA_ACTIVE
-   
-#    if(DATA_THREAD is not None):
-#       DATA_THREAD.join()
-#    else:
+   settings["ttl"] = _settings["refresh_rate_seconds"]
+   _settings["ttl"] = _settings["refresh_rate_seconds"]
+
    DATA_THREAD = Thread(target=data_handler, args=[_settings])
+   COUNTDOWN_THREAD = Thread(target=countdown, args=[settings])
    
+   COUNTDOWN_THREAD.start()
    DATA_THREAD.start()
 
 
 @socketio.on('handle_client')
 def handle_client():
-    print('sending client data')
+    #print('sending client data')
 
     global START_TIME
     if(START_TIME is None):
@@ -270,7 +279,7 @@ def handle_client():
 
       probe["timestamp"] = timestamp
       if(probe["initialTemp"] == 0):
-        print(f"InitialTemp: {probe['initialTemp']}")
+        #print(f"InitialTemp: {probe['initialTemp']}")
         probe["initialTemp"] = round(probe["data"][0], 2)
 
       probe["currentDelta"] = round(probe["data"][-1] - probe["initialTemp"], 2)
@@ -279,7 +288,7 @@ def handle_client():
       STOP_TIME = time.time()
       probe["elapsed"] = round((STOP_TIME - START_TIME)/60, 2)
 
-      print(f"valid probe data for: {probe['label']}")
+      #print(f"valid probe data for: {probe['label']}")
 
 
     labels.append(timestamp)
@@ -317,4 +326,4 @@ def mock_data(probe):
 if __name__ == '__main__':
     #print("run")
     # app.run('0.0.0.0', debug = True, threaded=False)
-    socketio.run(app, '0.0.0.0', port=8000, debug=True)
+    socketio.run(app, '0.0.0.0', port=8000, debug=False)

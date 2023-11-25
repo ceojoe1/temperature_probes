@@ -11,6 +11,10 @@ sudo systemctl enable temp_probes_app.service
 -- Start the service:
 sudo systemctl start temp_probes_app.service
 
+-- Stop the service:
+sudo systemctl stop temp_probes_app.service
+
+
 -- Check the status of the service: 
 sudo systemctl status temp_probes_app.service
 

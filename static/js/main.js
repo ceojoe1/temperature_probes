@@ -67,7 +67,9 @@ const initMain = (labels, probes, control, settings) => {
                 console.log("Timer changed to: " + refresh_rate)
                 settings.refresh_rate_seconds = refresh_rate
                 socket.emit("deactivate_data")
-                setTimeout(() =>socket.emit("activate_data", settings), 3)
+                control_trigger.html("Activate")
+
+                // setTimeout(() =>socket.emit("activate_data", settings), 3)
                 
 
                 // refreshTimerNextUpdate = refreshDetailListener(refresh_rate)
@@ -129,7 +131,9 @@ const initMain = (labels, probes, control, settings) => {
        
         })
 
-
+        socket.on("timer_countdown", (ttl) => {
+            next_refresh.html(ttl)
+        })
         socket.on('disconnect', () => {
             console.log("Disconnected")
             clearInterval(refreshTimer);
