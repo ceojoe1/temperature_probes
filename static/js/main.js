@@ -31,12 +31,14 @@ const refreshDetailListener = (countdownFrom) => {
         next_refresh.html(`${countdown --} seconds`)
     }, 1000)
 }
-const initMain = (labels, probes, control) => {
+
+const initMain = (labels, probes, control, settings) => {
     $(document).ready(function() { 
 
         socket = io();
         chart = null;
 
+   
 
         control_trigger = $(".controls_timer-trigger");
         resest_trigger = $(".controls_reset-trigger");
@@ -49,16 +51,27 @@ const initMain = (labels, probes, control) => {
         next_refresh = $(".next-refresh")
         temperatureSensorData = $(".temp-sensor-data")
 
+        if(settings.active) {
+            control_trigger.html("Deactivate")
+        } else {
+            control_trigger.html("Activate")
+        }
+
         control_timer.on('change', () => {
           
             
-            if(control_timer.html() == "Deactivate") {
-                clearInterval(refreshTimer);
+            if(control_trigger.html() == "Deactivate") {
+                //clearInterval(refreshTimer);
                 timer_option = $(".controls_timer-options option:selected")
-                let refresh_rate = timer_option.text() * 1000;
-                console.log("Timer changed to: " + timer_option)
-                refreshTimerNextUpdate = refreshDetailListener(refresh_rate)
-                refreshTimer = refreshListener(refresh_rate)
+                let refresh_rate = timer_option.text();
+                console.log("Timer changed to: " + refresh_rate)
+                settings.refresh_rate_seconds = refresh_rate
+                socket.emit("deactivate_data")
+                setTimeout(() =>socket.emit("activate_data", settings), 3)
+                
+
+                // refreshTimerNextUpdate = refreshDetailListener(refresh_rate)
+                // refreshTimer = refreshListener(refresh_rate)
                 
                 // setInterval(() => {
                 //         console.info("Testing on change state")
@@ -74,19 +87,21 @@ const initMain = (labels, probes, control) => {
                 control_trigger.html("Deactivate")
                 timer_option = $(".controls_timer-options option:selected")
                 
-                 refresh_rate = timer_option.text() * 1000
-                console.log("Settting Refresh rate to: " + refresh_rate)
-                socket.emit("send_data")
-                refreshTimer = refreshListener(refresh_rate)
-                refreshTimerNextUpdate = refreshDetailListener(refresh_rate)
+                 refresh_rate = timer_option.text()
+                 settings.refresh_rate_seconds = refresh_rate
+
+                socket.emit("activate_data", settings)
+
+                // refreshTimer = refreshListener(refresh_rate)
+                // refreshTimerNextUpdate = refreshDetailListener(refresh_rate)
                 // refreshTimer = setInterval(() => {
                 //     socket.emit("send_data")
                 // }, (refresh_rate))
             } else {
                 control_trigger.html("Activate")
-                clearInterval(refreshTimer);
-                clearInterval(refreshTimerNextUpdate)
-                socket.emit("stop_data")
+                // clearInterval(refreshTimer);
+                // clearInterval(refreshTimerNextUpdate)
+                socket.emit("deactivate_data")
                 next_refresh.html("N/A")
 
             }
@@ -94,8 +109,9 @@ const initMain = (labels, probes, control) => {
 
         resest_trigger.on('click', () => {
             control_trigger.html("Activate")
-            clearInterval(refreshTimer);
-            clearInterval(refreshTimerNextUpdate)
+            clearDataTable(labels, probes)
+            // clearInterval(refreshTimer);
+            // clearInterval(refreshTimerNextUpdate)
             next_refresh.html("N/A")
             socket.emit("reset_data")
         })
@@ -105,60 +121,12 @@ const initMain = (labels, probes, control) => {
         })
         socket.on('connect', () => {
             console.log("Connected to socket")
+            configureChart(labels, probes, control)
+            updatDataTable(labels, probes, control)
+            
+            $(".controls_timer-options").val(settings.refresh_rate_seconds)
 
-
-            for(var i = 0; i < probes.length; i ++) {
-                let canvas = $("#plot-"+probes[i].id)[0].getContext("2d");
-                let data = {
-                    labels: labels,
-                    datasets: [probes[i], control]
-                }
-                let options = {
-                    scales: {
-                    
-                        y: {
-                            suggestedMin: 20,
-                            suggestedMax: 150,
-                            ticks: {
-                                callback: function(value, index, ticks) {
-                                        return `${value} F`
-                                }
-                            }
-                       }
-
-                    },
-                    plugins: {
-                        annotation: {
-                          annotations: {
-                            label1: {
-                              type: 'label',
-                            //   xValue: 1,
-                              yValue: 45,
-                              position: "left",
-                              backgroundColor: 'rgba(221, 242, 253)',
-                              content: [
-                                `[${probes[i].label}] Line shows the current temperature of the liquid in the container`, 
-                                `[${control.label}] Line shows the current temperature in the room.`,
-                                `When [${probes[i].label}] reaches ${control.label} temp, the liquid has reached room temperature.`
-                                ],
-                              font: {
-                                size: 18,
-                                style: 'oblique',
-                                weight: 800
-                              }
-                            }
-                          }
-                        }
-                    }
-                }
-                let configs = {
-                    type: 'line',
-                    data: data,
-                    options: options
-                }
-                let temp_chart = new Chart(canvas, configs);
-                subcharts.push(temp_chart);
-            }
+       
         })
 
 

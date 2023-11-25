@@ -17,13 +17,16 @@
 }
 
 .smallDelta {
-background-color: #872341;
+background-color: #FECDA6;
 }
 .midDelta {
-    background-color: #BE3144;
+    background-color: #FF9130;
 }
 .largeDelta {
-    background-color: #F05941;
+    background-color: #FF5B22;
+}
+.targetReached {
+    background-color: #86A789;
 }
 .table_alignment {
     padding: 12px;

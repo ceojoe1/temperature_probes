@@ -12,11 +12,11 @@
                     <div class="controls_timer-subcontainer">
                         <span class="controls_timer-title"> Refresh Rate (Seconds)</span>
                         <select id="controls_timer-options" class="controls_timer-options">
-                            <option value="1sec" selected>1</option>
-                            <option value="5sec">5</option>
-                            <option value="10sec">10</option>
-                            <option value="1min"> 60</option>
-                            <option value="5min">300</option>
+                            <option value="1" selected>1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="60">60</option>
+                            <option value="300">300</option>
                         </select>
                         <div class="controls_timer-next-refresh">
                             <p> Next Refresh in: <span class="next-refresh"></span></p>
@@ -37,7 +37,7 @@
         <div class="charts-container">
                 {% if probes %}
                     {% for probe in probes %}
-                        <div class="charts_card">
+                        <div class="charts_card" id="charts_card-{{probe.id}}">
                             <div class="charts_card-probe-details">
                                 <p class="charts_card-probe-title">{{probe.label}}</p>
                                 <div class="charts_card-probe-details-body">
@@ -78,13 +78,16 @@
                             </div>
                             <div class="charts_card-data-table-container">
                                 <table class="charts_card-data-table" id="table-{{probe.id}}">
-                                    <tr>
+                                    <thead>
                                         <th>Timestamp</th>
                                             <th>Temperature</th>
                                             <th>Delta</th>
                                             <th>Delta %</th>
                                         </th>
-                                    </tr>
+                                        <tbody>
+
+                                        </tbody>
+                                    </thead>
                                 </table>
                             </div>
                         </div>

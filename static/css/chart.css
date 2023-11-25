@@ -77,6 +77,10 @@
     flex: .25;
 }
 
+.target-reached {
+    background-color: rgba(250, 227, 146, 0.4);
+}
+
 /* .chart-mini-container {
     display: flex;
     flex-direction: column;

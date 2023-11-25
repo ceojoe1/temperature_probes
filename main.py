@@ -4,6 +4,8 @@ from random import randrange
 from gpiozero import LED
 from datetime import datetime
 from libs.temp_probes import Temp_Probes
+import random
+
 try:
     import Adafruit_DHT
     DHT_SENSOR = Adafruit_DHT.DHT11
@@ -13,19 +15,29 @@ except Exception as ex:
 
    
 import time
+from threading import Thread
 
 
-
+DEBUG = True
 START_TIME = None
 END_TIME = None
 ERRORS = []
+DATA_ACTIVE = False
+
+DATA_THREAD = None
+TIMER_THREAD = None
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'RANDOM_SECRET'
 socketio = SocketIO(app)
 
-
+settings = {
+   "refresh_rate_seconds": 10,
+   "ttl": 10,
+   "active": DATA_ACTIVE
+}
 control = {
+   "index": 4,
    "order": 0,
    "borderColor": 'rgb(1, 116, 190)',
    "index": -1,
@@ -38,7 +50,7 @@ control = {
 }
 probe_1 = {
         "index": 0,
-        "label": "Foam",
+        "label": "Control Cup",
         "id": "probe_1",
         "timestamps": [datetime.now().strftime("%H:%M:%S")],
         "elapsed": 0,
@@ -123,7 +135,8 @@ probes_lib = Temp_Probes()
 @app.route("/")
 def main():
     measure_temp()
-    return render_template('index.html', probes=probes, labels=labels, control=control)
+    print(f"settings: {settings}")
+    return render_template('index.html', probes=probes, labels=labels, control=control, settings=settings)
 
 @socketio.on("reset_data")
 def data_reset():
@@ -145,10 +158,80 @@ def data_reset():
 @socketio.on("stop_data")
 def stop_data():
    print("handling socket reset")
+   global START_TIME, STOP_TIME, DATA_ACTIVE
+   START_TIME = None
+   STOP_TIME = None
+   DATA_ACTIVE = False
+
+
+
+connection_counter = 0
+
+def activate_countdown():
+   while settings["ttl"] > 0:
+      settings["ttl"] -= 1
+      emit("timer_countdown", settings["ttl"])
+      time.sleep(1)
+
+
+def data_handler(_settings):
+   print(_settings)
+
+
+   global settings
+   global DATA_ACTIVE
+   global COUNTER_ACTIVE
+
+   settings["refresh_rate_seconds"] = int(_settings["refresh_rate_seconds"])
+   
+   while True:
+      if(DATA_ACTIVE is False):
+         break
+      
+      handle_client()
+      time.sleep(settings["refresh_rate_seconds"])
+    
+    
+
+@socketio.on("deactivate_data")
+def deactivate_data():
+   print("Deactivating Data")
+   global DATA_THREAD, START_TIME, STOP_TIME, DATA_ACTIVE
+   DATA_ACTIVE = False
    START_TIME = None
    STOP_TIME = None
 
-@socketio.on('send_data')
+   settings["active"] = DATA_ACTIVE
+
+   if(DATA_THREAD is not None):
+      DATA_THREAD.join()
+
+   DATA_THREAD = None
+   
+   
+
+
+@socketio.on('activate_data')
+def activate_data(_settings):
+   print("Resetting data activation")
+   global DATA_ACTIVE
+   global COUNTER_ACTIVE
+   global DATA_THREAD
+   DATA_ACTIVE = True
+   COUNTER_ACTIVE = False
+
+   _settings["active"] = DATA_ACTIVE
+   settings["active"] = DATA_ACTIVE
+   
+#    if(DATA_THREAD is not None):
+#       DATA_THREAD.join()
+#    else:
+   DATA_THREAD = Thread(target=data_handler, args=[_settings])
+   
+   DATA_THREAD.start()
+
+
+@socketio.on('handle_client')
 def handle_client():
     print('sending client data')
 
@@ -165,11 +248,14 @@ def handle_client():
     #       #print(f"Skipping Probe: {probe['index']}")
     #       continue
       
-      if(len(probe["data"]) == 1):
-          probe["data"] = []
+    #   if(len(probe["data"]) == 1):
+    #       probe["data"] = []
         
       try:
-        probe = probes_lib.read_temps(probe)
+        if(DEBUG):
+           probe = mock_data(probe)
+        else:
+           probe = probes_lib.read_temps(probe)
       except Exception as ex:
          print(f"failed to read probe data for {probe['label']}")
          continue
@@ -203,9 +289,10 @@ def handle_client():
     response = {
         "labels": labels,
         "probes": probes,
-        "control": control
+        "control": control,
+        "settings": settings
     }
-    emit('receive_data', response)
+    socketio.emit('receive_data', response)
     #    return render_template("index.html")
 
 
@@ -219,8 +306,15 @@ def measure_temp():
    except:
       return
 
+def mock_data(probe):
+   sample_data = random.randrange(70, 180, 1)
+   probe["currentTemp"] = sample_data
+   probe["data"].append(sample_data)
+   probe["temp_f"] = sample_data
+   probe["temp_c"] = sample_data
+   return probe
 
 if __name__ == '__main__':
     #print("run")
     # app.run('0.0.0.0', debug = True, threaded=False)
-    socketio.run(app)
+    socketio.run(app, '0.0.0.0', port=8000, debug=True)

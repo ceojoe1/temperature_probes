@@ -20,8 +20,8 @@
     <script src="{{url_for('static',filename='/js/main.js')}}" ></script>
     <script src="{{url_for('static',filename='/js/charts.js')}}" ></script>
     
-    <script>initMain({{ labels | tojson }}, {{ probes | tojson }}, {{ control | tojson }})</script>
-    <script>initChart({{ labels | tojson }}, {{ probes | tojson }}, {{ control | tojson }})</script>
+    <script>initMain({{ labels | tojson }}, {{ probes | tojson }}, {{ control | tojson }}, {{ settings | tojson }})</script>
+    <script>initChart({{ labels | tojson }}, {{ probes | tojson }}, {{ control | tojson }}, {{ settings | tojson }})</script>
     {% endblock %}
 
 </head>
